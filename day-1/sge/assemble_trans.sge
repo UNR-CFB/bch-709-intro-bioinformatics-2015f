@@ -1,0 +1,28 @@
+#!/bin/bash
+# Execute the job from the current working directory
+#$ -cwd
+
+# Request 16 slots from the SharedMem parallel environment
+#$ -pe SharedMem 16
+
+# Qsub from the sge directory
+
+PYTHON=/opt/python/bin/python2.7
+DAY_PATH="$(dirname $PWD)"
+BASE_PATH="$(dirname "$DAY_PATH")"
+DB_PATH=$BASE_PATH/dbs
+SPADES_PATH=$DAY_PATH/bin/spades-3.6.1
+
+# If the databases directory does not exist the setup script has not run.
+# We cannot run the assembly.
+if [ ! -d $DB_PATH ]; then 
+	echo "ERROR: run the setup script."
+	exit
+fi
+
+# The database input file names
+DB_0=$DB_PATH/merged_sample.r1.fastq.gz
+DB_1=$DB_PATH/merged_sample.r2.fastq.gz
+
+# Run the assembler
+$PYTHON $SPADES_PATH/bin/spades.py --pe1-1 $DB_0 --pe1-2 $DB_1 -o $BASE_PATH/spades_output
