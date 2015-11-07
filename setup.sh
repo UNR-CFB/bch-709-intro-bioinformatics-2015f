@@ -6,5 +6,5 @@
 
 # The class uses several large database files. Rather than copy them we create
 # a symoblic link to their location.
-DB_PATH=/scratch/stsmith/class_dbs
+DB_PATH=/scratch/stsmith/bch-709-dbs
 ln -sf $DB_PATH dbs
