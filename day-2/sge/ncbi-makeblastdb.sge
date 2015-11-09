@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Execute in SGE directory
+#$ -cwd
+
+# Request 1 slot form the SharedMem parallel environment
+#$ -pe SharedMem 1
+
+# Qsub from the sge directory
+
+DAY_PATH="$(dirname $PWD)"
+BASE_PATH="$(dirname "$DAY_PATH")"
+SPADES_OUTPUT_PATH=$BASE_PATH/spades_output
+NCBI_PATH=$DAY_PATH/bin/ncbi-blast-2.2.31+/bin
+OUTPUT_PATH=$BASE_PATH/blast_db
+
+# If the spades directory does not exist the assembler has not been run.
+# We cannot create the blast db.
+if [ ! -d $SPADES_OUTPUT_PATH ]; then
+	echo "ERROR: assembler has not been run."
+	exit
+fi
+
+# The fasta file name
+FASTA_FILE=$SPADES_OUTPUT_PATH/contigs.fasta
+
+# Run blast makedb
+mkdir -p $OUTPUT_PATH
+$NCBI_PATH/makeblastdb -in $FASTA_FILE -out $OUTPUT_PATH/blast_db -title blast_db -dbtype nucl

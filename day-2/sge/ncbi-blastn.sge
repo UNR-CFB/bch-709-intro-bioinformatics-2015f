@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Execute in SGE directory
+#$ -cwd
+
+# Request 1 slot form the SharedMem parallel environment
+#$ -pe SharedMem 1
+
+# Qsub from the sge directory
+
+DAY_PATH="$(dirname $PWD)"
+BASE_PATH="$(dirname "$DAY_PATH")"
+DB_PATH=$BASE_PATH/dbs
+BLAST_DB_PATH="$BASE_PATH/blast_db"
+NCBI_PATH=$DAY_PATH/bin/ncbi-blast-2.2.31+/bin
+OUTPUT_PATH=$BASE_PATH/blast_output
+
+# If the dbs directory doesn't exist setup hasn't been run.
+# We cannot query the blast db.
+if [ ! -d $DB_PATH ]; then
+	echo "ERROR: setup has not been run."
+	exit
+fi
+
+# If the blast_db directory does not exist makeblastdb has not been run.
+# We cannot query the blast db.
+if [ ! -d $BLAST_DB_PATH ]; then
+	echo "ERROR: makeblastdb has not been run."
+	exit
+fi
+
+# The query file and db name
+DB=$BLAST_DB_PATH/blast_db
+QUERY_FILE=$DB_PATH/mutation.q
+
+# Run blastn
+mkdir -p $OUTPUT_PATH
+$NCBI_PATH/blastn -db $DB -out $OUTPUT_PATH/blast_out.txt -outfmt 1 -query $QUERY_FILE
