@@ -25,4 +25,4 @@ DB_0=$DB_PATH/illumina-reads-1.fastq.gz
 DB_1=$DB_PATH/illumina-reads-2.fastq.gz
 
 # Run the assembler
-$PYTHON $SPADES_PATH/bin/spades.py --pe1-1 $DB_0 --pe1-2 $DB_1 -o $BASE_PATH/spades_output_careful
+$PYTHON $SPADES_PATH/bin/spades.py --pe1-1 $DB_0 --pe1-2 $DB_1 -o $BASE_PATH/spades_output
